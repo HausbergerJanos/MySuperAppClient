@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hausberger.mysuperappclient">
 
+    <uses-permission android:name="com.hausberger.mysuperapp.provider.READ_WRITE" />
+
+    <queries>
+        <provider android:authorities="com.hausberger.mysuperapp.provider" />
+    </queries>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
