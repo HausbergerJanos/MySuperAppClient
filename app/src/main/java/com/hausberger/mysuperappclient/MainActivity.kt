@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
+import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.appcompat.app.AppCompatActivity
 import com.hausberger.mysuperappclient.databinding.ActivityMainBinding
 
@@ -36,11 +38,11 @@ class MainActivity : AppCompatActivity() {
         // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
         // To search for all documents available via installed storage providers, it would be
         // "*/*".
-        intent.type = "image/*";
+        intent.type = "*/*";
 
         startActivityForResult(intent, READ_REQUEST_CODE)
 
-        // Create document
+          // Create document
 //        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
 //        // will trigger exception if no  appropriate category passed
 //        // will trigger exception if no  appropriate category passed
@@ -58,10 +60,21 @@ class MainActivity : AppCompatActivity() {
             // The document selected by the user won't be returned in the intent.
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
-            var uri: Uri? = null
+            var uri: Uri?
             data?.let {
                 uri = data.data
-                showImage(uri)
+                val mime = MimeTypeMap.getSingleton()
+                when (mime.getExtensionFromMimeType(contentResolver.getType(it.data!!))) {
+                    "jpg" -> {
+                        showImage(uri)
+                    }
+
+                    "txt" -> {
+                        showText(uri)
+                    }
+                }
+
+
                 //renameDocument(data.data)
             }
         }
@@ -81,6 +94,23 @@ class MainActivity : AppCompatActivity() {
             fragmentArguments.putParcelable("URI", uri)
             imageDialog.arguments = fragmentArguments
             imageDialog.show(supportFragmentManager, "image_dialog")
+        }
+    }
+
+    /**
+     * Given the URI of a text, shows it on the screen using a DialogFragment.
+     *
+     * @param uri the Uri of the text to display.
+     */
+    private fun showText(uri: Uri?) {
+        uri?.let {
+            // Since the URI is to an image, create and show a DialogFragment to display the
+            // image to the user.
+            val textDialog = TextDialogFragment()
+            val fragmentArguments = Bundle()
+            fragmentArguments.putParcelable("URI", uri)
+            textDialog.arguments = fragmentArguments
+            textDialog.show(supportFragmentManager, "image_dialog")
         }
     }
 
