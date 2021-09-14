@@ -15,10 +15,8 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import java.io.BufferedReader
-import java.io.FileDescriptor
-import java.io.FileReader
-import java.io.IOException
+import java.io.*
+import java.nio.charset.Charset
 
 
 /** Create a Bitmap from the URI for that image and return it.
@@ -68,9 +66,12 @@ class TextDialogFragment : DialogFragment() {
         return try {
             parcelFileDescriptor = requireActivity().contentResolver.openFileDescriptor(uri!!, "r")
             val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
-            val fileReader = FileReader(fileDescriptor)
-            val text = BufferedReader(fileReader).use {
-                it.readText()
+
+            var text = ""
+            FileInputStream(fileDescriptor).use { stream ->
+                text = stream.bufferedReader(Charset.defaultCharset()).use {
+                    it.readText()
+                }
             }
             parcelFileDescriptor.close()
             text

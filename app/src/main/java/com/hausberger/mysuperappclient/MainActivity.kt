@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                         showImage(uri)
                     }
 
-                    "txt" -> {
+                    "txt", "docx" -> {
                         showText(uri)
                     }
                 }
