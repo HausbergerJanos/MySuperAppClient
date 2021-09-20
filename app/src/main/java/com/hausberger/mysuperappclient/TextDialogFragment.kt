@@ -52,7 +52,7 @@ class TextDialogFragment : DialogFragment() {
         // normally go.
         mDialog?.window!!.requestFeature(Window.FEATURE_NO_TITLE)
         val textView = TextView(activity)
-        textView.setTextColor(resources.getColor(R.color.white))
+        textView.setTextColor(resources.getColor(R.color.black))
         textView.setPadding(50,50,50,50)
         mDialog?.setContentView(textView)
 
